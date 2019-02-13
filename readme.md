@@ -16,7 +16,7 @@ It then reads your scenarios file to get queries to run for each scenario and th
 ### Construct your Scenarios file
 Your scenario file `./docs/scenarios.json` should follow a hierarchy mapping to:
 
-ScenarioName
+ScenarioName  
 |--> EnvironmentName  
 |--> IfQuery  
 |--> ThenQueries  
@@ -40,10 +40,10 @@ ScenarioName
 ### Update code as needed
 There are certain settings that you need to update for your setup. Please ensure that you set below:
 #### init.py
-`util.admin = 'dummy_sender@outlook.com'`: account that would get emails in case of any issues with your alerting mechanism
-`util.sender = 'dummy_sender@outlook.com'`: account that your alerts will be send from 
-`util.scenarios_to_run = ['BlockingQueries','LongRunningQueries'] `: scenarios that you want to run that map to `ScenarioName` node in your scenarios.json file
-`util.key_vault_uri = "https://yourazurekeyvault.vault.azure.net"` : keyvault uri that contains your connection strings by `EnvironmentName` and your sender account secret
+`util.admin = 'dummy_sender@outlook.com'`: account that would get emails in case of any issues with your alerting mechanism  
+`util.sender = 'dummy_sender@outlook.com'`: account that your alerts will be send from   
+`util.scenarios_to_run = ['BlockingQueries','LongRunningQueries'] `: scenarios that you want to run that map to `ScenarioName` node in your scenarios.json file  
+`util.key_vault_uri = "https://yourazurekeyvault.vault.azure.net"` : keyvault uri that contains your connection strings by `EnvironmentName` and your sender account secret  
 
 #### secrets.json
 At this time, MSIAuthentication is not supported from a local/dev environment. To get around this, you will need to create an app principal and provide the required parameters in `secrets\secrets.json`
@@ -61,5 +61,5 @@ Once upload and deployment completes successfully, you can visit your function i
 ![your app published](https://github.com/chisqrd/multi-scenario-env-alerting/blob/master/images/function_deployed.png)
 
 ## Learn more
-[Taking a closer look at Python support for Azure Functions](https://azure.microsoft.com/en-us/blog/taking-a-closer-look-at-python-support-for-azure-functions/)
+[Taking a closer look at Python support for Azure Functions](https://azure.microsoft.com/en-us/blog/taking-a-closer-look-at-python-support-for-azure-functions/)  
 [Functions Reference - Python](https://docs.microsoft.com/en-us/azure/azure-functions/functions-reference-python)
