@@ -33,7 +33,7 @@ ScenarioName
 
 ### Get your KeyVault ready
 
-1. Create a keyvault and ensure that the keyvault has the connection strings in secrets that are identical to `EnvironmentName` values in your `scenarios.json` file
+1. Create a keyvault and ensure that the keyvault has the connection strings in secrets that are identical to `EnvironmentName` values in your `scenarios.json` file. The value for your secret should look like `host=yourservername.postgres.database.azure.com port=5432 dbname=yourdatabase user=dbuser@yourservername password=yourpassword`  
 2. In the keyvault, create a policy that lets the identity of your azure function to `Get` from your `Secrets`
 3. Also in the keyvault, create a secret with name that matches to the value of `sender_secret_name variable`. The current value is `senderSecret`
 
