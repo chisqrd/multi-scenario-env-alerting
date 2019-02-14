@@ -45,7 +45,7 @@ class utilities:
             #import_library('msrestazure.azure_active_directory','MSIAuthentication')
             #self.import_libraries('msrestazure.azure_active_directory','MSIAuthentication')
 
-            with open('.\secrets\secrets.json','r') as data_file:
+            with open('./secrets/secrets.json','r') as data_file:
                 data = j.load(data_file)
 
             TENANT_ID = data['keyvault']['tenant_id']
@@ -59,7 +59,8 @@ class utilities:
             # environment while using MSIAuthentication. When it's supported, you may enable below line instead of the above lines
             # credentials = MSIAuthentication()
             return credentials
-        except:
+        except Exception as e:
+            self.logging.error("could not get the credentials: %s" %(e))
             self.credentials = None
 
     def get_secret_value(self,secret_name):

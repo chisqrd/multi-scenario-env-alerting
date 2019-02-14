@@ -31,10 +31,14 @@ ScenarioName
 |IfQuery| Query that helps the detection of an event that you are interested in|
 |ThenQueries| 1:many queries that will be attached to your alert email to understand the state of the workload at the time of the detected event|
 
+### Create an app principal
+
+Go to Azure Active Directory and [create an app principal](https://docs.microsoft.com/en-us/azure/active-directory/develop/quickstart-v1-add-azure-ad-app) for your app. You will then need to update your `./secrets/secrets.json` file with your tenant id, principal id and secret.
+
 ### Get your KeyVault ready
 
 1. Create a keyvault and ensure that the keyvault has the connection strings in secrets that are identical to `EnvironmentName` values in your `scenarios.json` file. The value for your secret should look like `host=yourservername.postgres.database.azure.com port=5432 dbname=yourdatabase user=dbuser@yourservername password=yourpassword`  
-2. In the keyvault, create a policy that lets the identity of your azure function to `Get` from your `Secrets`
+2. In the keyvault, create a policy that lets the app principal you created to `Get` from your `Secrets`
 3. Also in the keyvault, create a secret with name that matches to the value of `sender_secret_name variable`. The current value is `senderSecret`
 
 ### Update code as needed
@@ -46,7 +50,7 @@ There are certain settings that you need to update for your setup. Please ensure
 `util.key_vault_uri = "https://yourazurekeyvault.vault.azure.net"` : keyvault uri that contains your connection strings by `EnvironmentName` and your sender account secret  
 
 #### secrets.json
-At this time, MSIAuthentication is not supported from a local/dev environment. To get around this, you will need to create an app principal and provide the required parameters in `secrets\secrets.json`
+At this time, MSIAuthentication is not supported from a local/dev environment as well as Linux based functions and app service plans. To get around this, you will need to create an app principal and provide the required parameters in `secrets\secrets.json`
 
 ### Good to go!
 You are now ready to deploy. Go to Azure tab in Visual Studio Code, click Deploy and follow instructions.
