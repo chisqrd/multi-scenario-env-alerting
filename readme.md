@@ -45,17 +45,17 @@ Go to Azure Active Directory and [create an app principal](https://docs.microsof
 There are certain settings that you need to update for your setup. Please ensure that you set below:
 #### setup.json
 
-`{`
-`    "scenarios_to_run": "{\"scenarios\":[\"BlockingQueries\",\"LongRunningQueries\"]}",`
-`    "scenario_file_path":"./docs/scenarios.json",`
-`    "secrets_file_path":"./secrets/secrets.json",`
-`    "admin_email":"your_admin_email",`
-`    "sender_email":"your_sender_email",`
-`    "smtp_server":"smtp.office365.com",`
-`    "smtp_port":"587",`
-`    "key_vault_uri":"https://yourkeyvault.vault.azure.net",`
-`    "sender_secret_name":"senderSecret"`
-`}`
+`{`  
+`    "scenarios_to_run": "{\"scenarios\":[\"BlockingQueries\",\"LongRunningQueries\"]}",`  
+`    "scenario_file_path":"./docs/scenarios.json",`  
+`    "secrets_file_path":"./secrets/secrets.json",`  
+`    "admin_email":"your_admin_email",`  
+`    "sender_email":"your_sender_email",`  
+`    "smtp_server":"smtp.office365.com",`  
+`    "smtp_port":"587",`  
+`    "key_vault_uri":"https://yourkeyvault.vault.azure.net",`  
+`    "sender_secret_name":"senderSecret"`  
+`}`  
 
 `admin_email`: email account that would get emails in case of any issues with your alerting mechanism  
 `sender_email`: account that your alerts will be send from
