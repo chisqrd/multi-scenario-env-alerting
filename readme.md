@@ -12,6 +12,8 @@ It then reads your scenarios file to get queries to run for each scenario and th
 ### Prerequisites
 * [Install Visual Studio Code](https://code.visualstudio.com/Download)
 * [Install Docker](https://www.docker.com/get-started)
+* [Install Python 3.6 or later](https://www.python.org/downloads/)
+* [Install Azure Functions Core Tools version 2.2.70 or later (requires .NET Core 2.x SDK)](https://docs.microsoft.com/en-us/azure/azure-functions/functions-run-local#v2)
 
 ### Construct your Scenarios file
 Your scenario file `./docs/scenarios.json` should follow a hierarchy mapping to:
