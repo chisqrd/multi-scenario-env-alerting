@@ -10,6 +10,5 @@
   },
   "azureFunctions.pythonVenv": ".env",
   "debug.internalConsoleOptions": "neverOpen",
-  "python.pythonPath": ".env\\Scripts\\python.exe",
-  "appService.advancedCreation": true
+  "python.pythonPath": ".env\\Scripts\\python.exe"
 }

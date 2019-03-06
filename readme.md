@@ -41,13 +41,28 @@ Go to Azure Active Directory and [create an app principal](https://docs.microsof
 2. In the keyvault, create a policy that lets the app principal you created to `Get` from your `Secrets`
 3. Also in the keyvault, create a secret with name that matches to the value of `sender_secret_name variable`. The current value is `senderSecret`
 
-### Update code as needed
+### Update files as needed
 There are certain settings that you need to update for your setup. Please ensure that you set below:
-#### init.py
-`util.admin = 'dummy_sender@outlook.com'`: account that would get emails in case of any issues with your alerting mechanism  
-`util.sender = 'dummy_sender@outlook.com'`: account that your alerts will be send from   
-`util.scenarios_to_run = ['BlockingQueries','LongRunningQueries'] `: scenarios that you want to run that map to `ScenarioName` node in your scenarios.json file  
-`util.key_vault_uri = "https://yourazurekeyvault.vault.azure.net"` : keyvault uri that contains your connection strings by `EnvironmentName` and your sender account secret  
+#### setup.json
+
+`{`
+`    "scenarios_to_run": "{\"scenarios\":[\"BlockingQueries\",\"LongRunningQueries\"]}",`
+`    "scenario_file_path":"./docs/scenarios.json",`
+`    "secrets_file_path":"./secrets/secrets.json",`
+`    "admin_email":"your_admin_email",`
+`    "sender_email":"your_sender_email",`
+`    "smtp_server":"smtp.office365.com",`
+`    "smtp_port":"587",`
+`    "key_vault_uri":"https://yourkeyvault.vault.azure.net",`
+`    "sender_secret_name":"senderSecret"`
+`}`
+
+`admin_email`: email account that would get emails in case of any issues with your alerting mechanism  
+`sender_email`: account that your alerts will be send from
+`smtp_server`: smtp relay server to be used
+`sender_secret_name`: secret name of the password for the email account used to send your alert emails
+`scenarios_to_run`: value needs to be a json array including the scenarios that you want to run that map to `ScenarioName` node in your scenarios.json file  
+`key_vault_uri` : keyvault uri that contains your connection strings by `EnvironmentName` and your sender account secret  
 
 #### secrets.json
 At this time, MSIAuthentication is not supported from a local/dev environment as well as Linux based functions and app service plans. To get around this, you will need to create an app principal and provide the required parameters in `secrets\secrets.json`

@@ -3,37 +3,31 @@ class utilities:
     def __init__(self):
         import string
         import logging as logging
-
+        import sys as sys
+        
         self.logging = logging
-        self.admin = 'dummy_sender@outlook.com'
-        self.sender = 'dummy_sender@outlook.com'
-        self.scenarios_to_run = ['BlockingQueries']
-        self.scenario_file_path = './docs/scenarios.json'
-        self.key_vault_uri = 'https://yourazurekeyvault.vault.azure.net'
         self.credentials = None
-        self.smtpserver = 'smtp.office365.com'
-        self.smtpport = 587
-        self.sender_secret_name = 'senderSecret'
-
+        self.sys = sys
+        
+        #read setup file
+        self.setup_file_path = './docs/setup.json'
+        self.get_setup()
+        
     # ################################################
     # Import related functions
     # ################################################
 
     def import_library(self, library_package, library_names = None):
-        if library_names is None:
-            try:
+        try:
+            if library_names is None:
                 self.logging.info("Importing %s library" % library_package)
                 return __import__(library_package)
-            except ImportError:
-                raise ImportError("You need to install %s library for credential retrieval. e.g. pip install %s" %(library_package, library_package.replace('.','-')))
-        else:
-            try:
+            else:
                 self.logging.info("Importing %s library from %s" %(' and '.join(library_names),library_package))
                 return __import__(name=library_package,fromlist=library_names)
-            except ImportError:
-                raise ImportError("You need to install the required library(ies) %s. e.g. pip install %s" %(','.join(library_names), library_package.replace('.','-')))
-
-
+        except ImportError:
+            raise ImportError('Library was not found: %s' %(library_package))
+            
     # ################################################
     # Authorization & Authentication related functions
     # ################################################
@@ -113,11 +107,6 @@ class utilities:
         os = self.import_library('os')
         json = self.import_library('json')
         try:
-    #        if len(sys.argv) == 3:
-    #            scenario = sys.argv[1]
-    #            scenarioFilePath = sys.argv[2]
-    #        else:
-    #            raise ValueError("You must set the scenario name and the scenario master file path in order to run this script")
             self.logging.info("Current working directory is: %s" %os.getcwd())
             self.logging.info("Reading the scenario specifics")
             
@@ -138,32 +127,64 @@ class utilities:
             self.logging.error("Error reading scenario file: %s" %(e))
             #self.sendMail(ADMIN,SENDER,"Cron job cannot start %s scenario" %(scenario),"There is an issue with loading the json section for this scenario. Please ensure json is well-formed.")
 
+    # ################################################
+    # Read setup.json file
+    # ################################################
+
+    def get_setup(self):
+        os = self.import_library('os')
+        json = self.import_library('json')
+        try:
+            self.logging.info("Current working directory is: %s" %os.getcwd())
+            self.logging.info("Reading setup file")
+            
+            with open(self.setup_file_path,'r') as data_file:
+                data = json.load(data_file)
+
+            self.admin = data['admin_email']
+            self.sender = data['sender_email']
+            self.scenarios_to_run = json.loads(data['scenarios_to_run'])['scenarios']
+            self.scenario_file_path = data['scenario_file_path']
+            self.key_vault_uri = data['key_vault_uri']
+            self.smtpserver = data['smtp_server']
+            self.smtpport = data['smtp_port']
+            self.sender_secret_name = data['sender_secret_name']
+
+        except ValueError as e:
+            self.logging.error("Required arguments not passed: %s" %(e))
+            #self.sendMail(ADMIN,SENDER,"Cron job missing arguments","Please review your cron job for missing arguments. Expecting scenario ....py scenarioFilePath in order")
+
+        except Exception as e:
+            self.logging.error("Error reading scenario file: %s" %(e))
+            #self.sendMail(ADMIN,SENDER,"Cron job cannot start %s scenario" %(scenario),"There is an issue with loading the json section for this scenario. Please ensure json is well-formed.")
 
 
     # ################################################
     # Email related functions
     # ################################################
 
-    def send_mail(self,to, fr, subject, text, files={},server='smtp.office365.com'):
+    def send_my_mail(self,to, fr, subject, text, files={},server='smtp.office365.com'):
         slib = self.import_library('smtplib')
-        mmm = self.import_library('email.mime.multipart',['MIMEMultipart'])
-        mmb = self.import_library('email.mime.base',['MIMEBase'])
-        mmt = self.import_library('email.mime.text',['MIMEText'])
-        fd = self.import_library('email.utils',['formatdate'])
-        enc = self.import_library('email',['encoders'])
-
+        self.import_library('email')
+        #self.import_library('email.mime')
+        
         try:
-            msg = mmm.MIMEMultipart()
+            from email.mime.multipart import MIMEMultipart
+            from email.mime.base import MIMEBase
+            from email.mime.text import MIMEText
+            from email import encoders
+            from email.utils import formatdate  
+            msg = MIMEMultipart()
             msg['From'] = fr
             msg['To'] = to
-            msg['Date'] = fd.formatdate(localtime=True)
+            msg['Date'] = formatdate(localtime=True)
             msg['Subject'] = subject
-            msg.attach( mmt.MIMEText(text) )
+            msg.attach( MIMEText(text) )
 
             for filekey,filevalue in files.items():
-                part = mmb.MIMEBase('application', "octet-stream")
+                part = MIMEBase('application', "octet-stream")
                 part.set_payload(filevalue)
-                enc.encoders.encode_base64(part)
+                encoders.encode_base64(part)
                 part.add_header('Content-Disposition', 'attachment; filename="%s"'% filekey)
                 msg.attach(part)
 
@@ -178,3 +199,5 @@ class utilities:
 
         except slib.SMTPException as e:
             self.logging.error("Unable to send email: %s" %(e))
+        except Exception as ex:
+            self.logging.error("An error occurred: %s" %(ex))

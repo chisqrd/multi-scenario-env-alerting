@@ -6,7 +6,11 @@
       "command": "host start",
       "problemMatcher": "$func-watch",
       "isBackground": true,
-      "dependsOn": "func: extensions install"
+      "dependsOn": "func: extensions install",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
     },
     {
       "type": "func",

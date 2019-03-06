@@ -1,24 +1,19 @@
 from .utilities import utilities as u
 
 util = u()
-#admin email is the one that receives an alert when there is an issue with what's being monitored
-util.admin = 'dummy_sender@outlook.com'
-util.sender = 'dummy_sender@outlook.com'
-#these are scenarios from the scenarios.json file. you can run 1 to many scenarios included in the file
-util.scenarios_to_run = ['BlockingQueries','LongRunningQueries']
-util.scenario_file_path = './docs/scenarios.json'
-#ensure that you have a pre-existing keyvault
-util.key_vault_uri = "https://yourazurekeyvault.vault.azure.net"
 
-util.import_library('sys')
+sys = util.import_library('sys')
 util.import_library('azure.functions')
 sio = util.import_library('io',['StringIO'])
-import azure.functions as func
+func = util.import_library('azure.functions')
 datetime = util.import_library('datetime')
 
 def main(mytimer: func.TimerRequest) -> None:
     utc_timestamp = datetime.datetime.utcnow().replace(
         tzinfo=datetime.timezone.utc).isoformat()
+    
+    util.logging.info("Operating System: %s" % (sys.platform))
+    util.logging.info("Python Version %s.%s" % (sys.version_info[0],sys.version_info[1]))
 
     if mytimer.past_due:
         util.logging.info('The timer is past due!')
@@ -78,7 +73,7 @@ def main(mytimer: func.TimerRequest) -> None:
                     result[k] = f.getvalue()
 
                 #send the alert email
-                util.send_mail(recipients,util.sender,"Alert: scenario %s in environment %s" %(current_scenario_name, environment),"Please find attached",result)
+                util.send_my_mail(recipients,util.sender,"Alert: scenario %s in environment %s" %(current_scenario_name, environment),"Please find attached",result)
 
         except Exception as e:
             util.logging.error('exception occurred: %s'%(e))

@@ -1,0 +1,11 @@
+{
+    "scenarios_to_run": "{\"scenarios\":[\"BlockingQueries\",\"LongRunningQueries\"]}",
+    "scenario_file_path":"./docs/scenarios.json",
+    "secrets_file_path":"./secrets/secrets.json",
+    "admin_email":"your_admin_email",
+    "sender_email":"your_sender_email",
+    "smtp_server":"smtp.office365.com",
+    "smtp_port":"587",
+    "key_vault_uri":"https://yourkeyvault.vault.azure.net",
+    "sender_secret_name":"senderSecret"
+}
